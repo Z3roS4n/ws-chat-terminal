@@ -7,7 +7,9 @@ sio = socketio.AsyncClient()
 async def connect(): print("Connected to server, write /help to see commands!")
 
 @sio.event
-async def disconnect(): print("Disconnesso dal server!")
+async def disconnect():
+  print("Disconnected!")
+  exit()
 
 @sio.event
 async def message(data): print("-->", data)
@@ -18,12 +20,8 @@ async def main():
   
   while True:
     msg = input("Send -> ")
-    if msg.lower() in ("/exit", "/quit"):
-      break
     await sio.emit("message", msg)
     await asyncio.sleep(2)
-  
-  await sio.disconnect()
 
 # Avvia il loop asyncio
 asyncio.run(main())
