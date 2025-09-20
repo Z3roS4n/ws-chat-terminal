@@ -16,18 +16,20 @@ async def message(data): print("Risposta dal server:", data)
 async def username(data):
   print("Username {username} impostato!".format(username=data))
 
+async def changeUsername(): 
+  username = input("Scegli il tuo username: ")
+  await sio.emit("username", username)
+  await asyncio.sleep(2)
+
 async def main():
   hostname = input("Connect to (def. http://localhost:6969): ") or "http://localhost:6969"
   await sio.connect(hostname)
-  
-  username = input("Scegli il tuo username: ")
-  
-  await sio.emit("username", username)
-  await asyncio.sleep(2)
+
+  await changeUsername()
   
   while True:
-    msg = input("Messaggio: ")
-    if msg.lower() in ("exit", "quit"):
+    msg = input("Send -> ")
+    if msg.lower() in ("/exit", "/quit"):
       break
     await sio.emit("message", msg)
     await asyncio.sleep(2)
