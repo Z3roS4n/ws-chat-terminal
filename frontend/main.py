@@ -4,28 +4,17 @@ import socketio
 sio = socketio.AsyncClient()
 
 @sio.event
-async def connect(): print("Connesso al server!")
+async def connect(): print("Connected to server, write /help to see commands!")
 
 @sio.event
 async def disconnect(): print("Disconnesso dal server!")
 
 @sio.event
-async def message(data): print("Risposta dal server:", data)
-    
-@sio.event
-async def username(data):
-  print("Username {username} impostato!".format(username=data))
-
-async def changeUsername(): 
-  username = input("Scegli il tuo username: ")
-  await sio.emit("username", username)
-  await asyncio.sleep(2)
+async def message(data): print("-->", data)
 
 async def main():
   hostname = input("Connect to (def. http://localhost:6969): ") or "http://localhost:6969"
   await sio.connect(hostname)
-
-  await changeUsername()
   
   while True:
     msg = input("Send -> ")
